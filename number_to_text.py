@@ -29,6 +29,14 @@ def multiples_of_ten_to_word(self):
         if self == str(i): return multiples_of_ten[i - 2]
 
 
+def position_of_hundreds(self):
+    if len(self) == 2:
+        if self[1] != '1':
+            return first_9_numbers_to_word(self[0])
+    else:
+        return first_9_numbers_to_word(self[0])
+
+
 def units(self, l):
     if l > 1:  # if 2 digits are given as input
         if self[1] == '1':
@@ -127,7 +135,7 @@ def indian_number_system(self):
     n = self[::-1]  # Reverse the number
     l = len(n)
     for i in range(0, l):
-        if n[i]!='0':
+        if n[i] != '0':
             # Units Place
             if i == 0:
                 if l >= 2:
@@ -146,10 +154,11 @@ def indian_number_system(self):
 
             # Thousands Place
             if i == 3:
-                if l >= 5:  # l>=5 because to know if there is a digit after thousands place
-                    result.append(thousands(n[i:i + 2]))
+                if l >= 5: # l>=5 because to know if there is a digit after thousands place
+                    result.append()
+                    result.append(position_of_hundreds(n[i:i + 2]) + " Thousand")
                 elif l == 4:
-                    result.append(thousands(n[i]))
+                    result.append(position_of_hundreds(n[i]) + " Thousand")
                 continue
             # Ten Thousands Place
             if i == 4:
@@ -158,9 +167,9 @@ def indian_number_system(self):
             # Lakhs Place
             if i == 5:
                 if l >= 7:
-                    result.append(lakhs(n[i:i + 2]))
+                    result.append(position_of_hundreds(n[i:i + 2]) + ' Lakh')
                 elif l == 6:
-                    result.append(lakhs(n[i]))
+                    result.append(position_of_hundreds(n[i]) + ' Lakh')
                 continue
             # Ten Lakhs Place
             if i == 6:
@@ -169,10 +178,11 @@ def indian_number_system(self):
             # Crore Place
             if i == 7:
                 if l >= 9:
-                    result.append(crores(n[i:i + 2]))
+                    result.append(position_of_hundreds(n[i:i + 2]) + ' Crore')
                 elif l == 8:
-                    result.append(crores(n[i]))
+                    result.append(position_of_hundreds(n[i]) + ' Crore')
                 continue
+            # ten crore
             if i == 8:
                 result.append(ten_crores(n[i - 1:i + 1]))
                 continue
@@ -191,8 +201,8 @@ def international_number_system(self):
     n = self[::-1]  # Reverse the number
     l = len(n)
     for i in range(0, l):
-        if n[i]!='0':
-        # Units Place
+        if n[i] != '0':
+            # Units Place
             if i == 0:
                 if l >= 2:
                     result.append(units(n[i:i + 2], l))
@@ -228,8 +238,8 @@ def international_number_system(self):
                     result.append(millions(n[i:i + 2]))
                 elif l == 4:
                     result.append(millions(n[i]))
-            #ten million place
-            if i==7:
+            # ten million place
+            if i == 7:
                 result.append(ten_thousands(n[i - 1:i + 1]))
     display(result)
 
