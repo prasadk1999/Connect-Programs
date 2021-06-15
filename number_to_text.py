@@ -1,125 +1,63 @@
-units_place = None
-tens_place = None
-hundred_place = None
-thousand_place = None
-ten_thousand_place = None
-lakh_place = None
-ten_lakh_place = None
-crore_place = None
-ten_crore_place = None
+import sys
+
 result = []
+first_9_number = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
+ten_to_nineteen = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen',
+                   'Nineteen']
+multiples_of_ten = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
 
 
-def first_9_numbers_to_word(self):
-    first_9_number = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
-    for i in range(1, 10):
-        if self == str(i): return first_9_number[i - 1]
-
-
-def ten_to_nineteen_to_word(self):
-    ten_to_nineteen = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen',
-                       'Nineteen']
-    for i in range(0, 10):
-        if self == str(i): return ten_to_nineteen[i]
-
-
-def multiples_of_ten_to_word(self):
-    multiples_of_ten = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
-    for i in range(2, 10):
-        if self == str(i): return multiples_of_ten[i - 2]
-
-
-def position_of_hundreds(self):
-    if len(self) == 2:
-        if self[1] != '1':
-            return first_9_numbers_to_word(self[0])
+def position_of_thousands(self, l, position_of_digit, suffix):  # Converts thousands and positions of thousands to text
+    # position_of_digit means the index at which the digit exists
+    temp_number = l_result = ''
+    # First we take out the digits at thousands and ten thousands place
+    if l >= position_of_digit + 2:  # if there exists a digit at ten thousandth place
+        temp_number = self[position_of_digit:position_of_digit + 2]
+    elif l == position_of_digit + 1:  # if this is the last digit of the number
+        temp_number = self[position_of_digit]
+    # Convert the number to text according to the number
+    if len(temp_number) == 2:  # executes if there number is in range 10000-99999, basically if ten_thousandth digit
+        # exists!
+        if temp_number[1] != '1':  # This function does not execute numbers from 10-19
+            l_result = first_9_number[int(temp_number[0]) - 1]
+            result.append(l_result + suffix if l_result is not None else '')
     else:
-        return first_9_numbers_to_word(self[0])
+        l_result = first_9_number[int(temp_number[0]) - 1]
+        result.append(l_result + suffix if l_result is not None else '')
 
 
-def units(self, l):
-    if l > 1:  # if 2 digits are given as input
+def position_of_ten_thousands(self, suffix):  # Converts digits at ten thousand and positions of ten thousands to text
+    if self[0] == '0':  # this if is only for numbers which are multiples of 10 i.e 10,20,30 etc
+        if self[1] == '1':  # only 10 number is executed here
+            return ten_to_nineteen[int(self[0])] + suffix
+        else:  # 20-90 numbers executed here
+            return multiples_of_ten[int(self[1]) - 2] + suffix
+    else:  # numbers except 10-19 and multiples of 10 are executed here
         if self[1] == '1':
-            pass
+            return ten_to_nineteen[int(self[0])] + suffix
         else:
-            return first_9_numbers_to_word(self[0])
+            return multiples_of_ten[int(self[1]) - 2]
+
+
+def units(self, l):  # Converts unit digit to text
+    if l > 1:  # if 2 digits are given as input
+        if self[1] != '1':
+            return first_9_number[int(self[0]) - 1]
     else:  # if only one digit is given as input
-        return first_9_numbers_to_word(self[0])
+        return first_9_number[int(self[0]) - 1]
 
 
 def tens(self):
     # if value at tens place is 1, then return statement will be based on value at unit's place
     if self[1] == '1':
-        return ten_to_nineteen_to_word(self[0])
+        return ten_to_nineteen[int(self[0])]
     else:
-        return multiples_of_ten_to_word(self[1])
+        return multiples_of_ten[int(self[1]) - 2]
 
 
 def hundreds(self):
-    return first_9_numbers_to_word(self) + ' Hundred'
-
-
-def thousands(self):
-    if len(self) == 2:
-        if self[1] != '1':
-            return first_9_numbers_to_word(self[0]) + ' Thousand'
-    else:
-        return first_9_numbers_to_word(self[0]) + ' Thousand'
-
-
-def ten_thousands(self):
-    if self[0] == '0':
-        if self[1] == '1':
-            return ten_to_nineteen_to_word(self[0]) + ' Thousand'
-        else:
-            return multiples_of_ten_to_word(self[1]) + ' Thousand'
-    else:
-        if self[1] == '1':
-            return ten_to_nineteen_to_word(self[0]) + ' Thousand'
-        else:
-            return multiples_of_ten_to_word(self[1])
-
-
-def lakhs(self):
-    if len(self) == 2:
-        if self[1] != '1':
-            return first_9_numbers_to_word(self[0]) + ' Lakh'
-    else:
-        return first_9_numbers_to_word(self[0]) + ' Lakh'
-
-
-def ten_lakhs(self):
-    if self[0] == '0':
-        if self[1] == '1':
-            return ten_to_nineteen_to_word(self[0]) + ' Lakh'
-        else:
-            return multiples_of_ten_to_word(self[1]) + ' Lakh'
-    else:
-        if self[1] == '1':
-            return ten_to_nineteen_to_word(self[0]) + ' Lakh'
-        else:
-            return multiples_of_ten_to_word(self[1])
-
-
-def crores(self):
-    if len(self) == 2:
-        if self[1] != '1':
-            return first_9_numbers_to_word(self[0]) + ' Crore'
-    else:
-        return first_9_numbers_to_word(self[0]) + ' Crore'
-
-
-def ten_crores(self):
-    if self[0] == '0':
-        if self[1] == '1':
-            return ten_to_nineteen_to_word(self[0]) + ' Crore'
-        else:
-            return multiples_of_ten_to_word(self[1]) + ' Crore'
-    else:
-        if self[1] == '1':
-            return ten_to_nineteen_to_word(self[0]) + ' Crore'
-        else:
-            return multiples_of_ten_to_word(self[1])
+    temp = first_9_number[int(self) - 1]
+    return temp + ' Hundred' if temp is not None else ''
 
 
 def display(self):
@@ -131,16 +69,19 @@ def display(self):
 
 
 def indian_number_system(self):
-    global hundred_place, tens_place, units_place, thousand_place, ten_thousand_place, lakh_place, ten_lakh_place, crore_place, ten_crore_place, result
+    suffixes = [' Thousand', ' Lakh', ' Crore', ' Arab', ' Kharab', ' Nil', ' Padma', ' Shankh']
+    counter_of_suffix = 0
+    thousandth_position = 3
+    ten_thousandth_position = 4
     n = self[::-1]  # Reverse the number
     l = len(n)
-    for i in range(0, l):
-        if n[i] != '0':
+    for i in range(0, 3):
+        if n[i] != '0' and i < l:
             # Units Place
             if i == 0:
                 if l >= 2:
                     result.append(units(n[i:i + 2], l))
-                else:
+                else:  # if only 1 digit exists
                     result.append(units(n[i], l))
                 continue
             # Tens Place
@@ -151,57 +92,38 @@ def indian_number_system(self):
             if i == 2:
                 result.append(hundreds(n[i]))
                 continue
-
-            # Thousands Place
-            if i == 3:
-                if l >= 5: # l>=5 because to know if there is a digit after thousands place
-                    result.append()
-                    result.append(position_of_hundreds(n[i:i + 2]) + " Thousand")
-                elif l == 4:
-                    result.append(position_of_hundreds(n[i]) + " Thousand")
+    for i in range(3, l):
+        if n[i] != '0':
+            if i == thousandth_position:
+                position_of_thousands(n, l, i, suffixes[counter_of_suffix])
+                thousandth_position = thousandth_position + 2
                 continue
-            # Ten Thousands Place
-            if i == 4:
-                result.append(ten_thousands(n[i - 1:i + 1]))
+            if i == ten_thousandth_position:
+                result.append(position_of_ten_thousands(n[i - 1:i + 1], suffixes[counter_of_suffix]))
+                ten_thousandth_position = ten_thousandth_position + 2
+                counter_of_suffix = counter_of_suffix + 1
                 continue
-            # Lakhs Place
-            if i == 5:
-                if l >= 7:
-                    result.append(position_of_hundreds(n[i:i + 2]) + ' Lakh')
-                elif l == 6:
-                    result.append(position_of_hundreds(n[i]) + ' Lakh')
+        else:
+            if i == thousandth_position:
+                thousandth_position = thousandth_position + 2
                 continue
-            # Ten Lakhs Place
-            if i == 6:
-                result.append(ten_lakhs(n[i - 1:i + 1]))
-                continue
-            # Crore Place
-            if i == 7:
-                if l >= 9:
-                    result.append(position_of_hundreds(n[i:i + 2]) + ' Crore')
-                elif l == 8:
-                    result.append(position_of_hundreds(n[i]) + ' Crore')
-                continue
-            # ten crore
-            if i == 8:
-                result.append(ten_crores(n[i - 1:i + 1]))
+            if i == ten_thousandth_position:
+                ten_thousandth_position = ten_thousandth_position + 2
+                counter_of_suffix = counter_of_suffix + 1
                 continue
     display(result)
 
 
-def millions(self):
-    if len(self) == 2:
-        if self[1] != '1':
-            return first_9_numbers_to_word(self[0]) + ' Million'
-    else:
-        return first_9_numbers_to_word(self[0]) + ' Million'
-
-
 def international_number_system(self):
+    suffixes = [' Thousand', ' Million', ' Billion', ' Trillion', ' Quadrillion', ' Quintillion']
+    counter_of_suffix = 0
+    thousandth_position = 3
+    ten_thousandth_position = 4
+    hundred_thousandth_position = 5
     n = self[::-1]  # Reverse the number
     l = len(n)
-    for i in range(0, l):
-        if n[i] != '0':
+    for i in range(0, 3):
+        if n[i] != '0' and i < l:
             # Units Place
             if i == 0:
                 if l >= 2:
@@ -217,41 +139,51 @@ def international_number_system(self):
             if i == 2:
                 result.append(hundreds(n[i]))
                 continue
-            # Thousands Place
-            if i == 3:
-                if l >= 5:  # l>=5 because to know if there is a digit after thousands place
-                    result.append(thousands(n[i:i + 2]))
-                elif l == 4:
-                    result.append(thousands(n[i]))
-            # Ten Thousands Place
-            if i == 4:
-                result.append(ten_thousands(n[i - 1:i + 1]))
-            # Hundred Thousands Place
-            if i == 5:
-                if n[i - 1] != '0' and n[i - 2] != '0':
-                    result.append(hundreds(n[i]))
+    for i in range(3, l):
+        if n[i] != '0':
+            if i == thousandth_position:  # this section will only execute when the index is in position of
+                # thousands, like 4th,7th,10th, etc.
+                position_of_thousands(n, l, i,
+                                      suffixes[counter_of_suffix])  # converts the digit passed into appropriate text
+                thousandth_position = thousandth_position + 3
+            if i == ten_thousandth_position:
+                result.append(position_of_ten_thousands(n[i - 1:i + 1], suffixes[counter_of_suffix]))
+                ten_thousandth_position = ten_thousandth_position + 3
+            if i == hundred_thousandth_position:
+                if n[i - 1] == '0' and n[i - 2] == '0':  # for numbers like 100000,2000000, etc
+                    result.append(hundreds(n[i]) + suffixes[counter_of_suffix])
                 else:
-                    result.append(hundreds(n[i]) + ' Thousand')
-            # million place
-            if i == 6:
-                if l >= 5:  # l>=5 because to know if there is a digit after thousands place
-                    result.append(millions(n[i:i + 2]))
-                elif l == 4:
-                    result.append(millions(n[i]))
-            # ten million place
-            if i == 7:
-                result.append(ten_thousands(n[i - 1:i + 1]))
+                    result.append(hundreds(n[i]) + ' and')
+                hundred_thousandth_position = hundred_thousandth_position + 3
+                counter_of_suffix = counter_of_suffix + 1
+        else:  # if, if part does not get executed(if there are zeroes), then this part ensures that position
+            # variables are properly adjusted.
+            if i == thousandth_position:
+                thousandth_position = thousandth_position + 3
+            if i == ten_thousandth_position:
+                ten_thousandth_position = ten_thousandth_position + 3
+            if i == hundred_thousandth_position:
+                hundred_thousandth_position = hundred_thousandth_position + 3
+                counter_of_suffix = counter_of_suffix + 1
+
     display(result)
 
 
 if __name__ == '__main__':
     result = []
-    number = input('Enter a number:')
-    print('1. Indian Number system\n2.) US Number system\n')
-    choice = int(input('Enter choice:'))
-    if choice == 1:
-        indian_number_system(number)
-    elif choice == 2:
-        international_number_system(number)
-    else:
-        print('Invalid Input!!')
+    while 1:
+        number = int(input('Enter a number:'))
+        print('1. Indian Number system\n2.) US Number system\n3.)Quit')
+        choice = int(input('Enter choice:'))
+        if choice == 1:
+            if number < 0:
+                print('Minus', end=' ')
+            indian_number_system(str(abs(number)))
+        elif choice == 2:
+            if number < 0:
+                print('Minus', end=' ')
+            international_number_system(str(abs(number)))
+        elif choice == 3:
+            sys.exit(1)
+        else:
+            print("Invalid Input!")
